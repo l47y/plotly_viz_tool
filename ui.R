@@ -3,6 +3,7 @@ library(shiny)
 library(shinydashboard)
 
 shinyUI(fluidPage(
+  theme = "styles.css",
   useShinyjs(),  # Include shinyjs
   
   fluidRow(
@@ -10,6 +11,7 @@ shinyUI(fluidPage(
     column(
       4, 
       fileInput("datainput", "Choose file", multiple = FALSE, accept = NULL, width = NULL),
+      selectInput("datainput2", "Or select from list", choices = c("None", "iris")),
       uiOutput("plottype")     
     ), 
     column(
