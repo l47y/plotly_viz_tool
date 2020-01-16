@@ -60,7 +60,8 @@ shinyServer(function(input, output) {
         x = tmp[[input$selectcol1]],
         y = tmp[[input$selectcol2]], 
         type = "scatter", 
-        color = tmp[[input$selectcol3]]
+        color = tmp[[input$selectcol3]],
+        mode = input$scatter_mode
       ))
     } else if (input$selectplottype == "bar") {
       p <- expr(plot_ly(
@@ -89,6 +90,20 @@ shinyServer(function(input, output) {
   
   output$plot_call <- renderText({
     print(last_plot_call())
+  })
+  
+  output$plot_setup <- renderUI({
+    
+    output = tagList()
+    
+    if (length(input$selectplottype) > 0) {
+      if (input$selectplottype == "scatter") {
+        output[[1]] <- tagList()
+        output[[1]][[1]] <- selectInput("scatter_mode", "Mode", choices = c("lines", "markers", "lines+markers"))
+      }
+    }
+      
+    output
   })
   
 })
