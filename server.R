@@ -1,6 +1,7 @@
 library(shinyjs)
 library(shiny)
 library(readr)
+library(data.table)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -10,11 +11,11 @@ shinyServer(function(input, output) {
   
   observe ({
     if (!is.null(input$datainput)) {
-      mydata(read_csv(input$datainput$datapath))
+      mydata(as.data.table(read_csv(input$datainput$datapath)))
     }
     if (input$datainput2 != "None") {
       tmp <- eval(parse(text = input$datainput2))
-      mydata(tmp)
+      mydata(as.data.table(tmp))
     }
    })
   
@@ -25,6 +26,12 @@ shinyServer(function(input, output) {
       } else {
         shinyjs::show("selectcol2")
       }
+      if (input$selectplottype == "heatmap") {
+        shinyjs::hide("selectcol3")
+      } else {
+        shinyjs::show("selectcol3")
+      }
+      
     }
   })
   
@@ -49,7 +56,8 @@ shinyServer(function(input, output) {
   
   output$plottype <- renderUI({
     if (!is.null(mydata())) {
-      selectInput("selectplottype", "Type of plot", choices = c("scatter", "bar", "histogram", "pie"))
+      selectInput("selectplottype", "Type of plot", 
+                  choices = c("scatter", "bar", "histogram", "pie", "heatmap"))
     }
   })
   
@@ -73,8 +81,9 @@ shinyServer(function(input, output) {
         x = tmp[[input$selectcol1]],
         y = tmp[[input$selectcol2]], 
         type = "bar", 
+        barmode = input$bar_mode,
         color = tmp[[input$selectcol3]]
-      ))
+      ) %>% layout(barmode = input$bar_mode))
     } else if (input$selectplottype == "histogram") {
       p <- expr(plot_ly(
         x = tmp[[input$selectcol1]],
@@ -86,6 +95,17 @@ shinyServer(function(input, output) {
         labels = tmp[[input$selectcol1]],
         values = tmp[[input$selectcol1]],
         type = "pie"
+      ))
+    } else if (input$selectplottype == "heatmap") {
+      tmp1 <- tmp[, .N, c(input$selectcol1, input$selectcol2)]
+      if (input$heatmap_mode == "percentage") {
+        tmp1[, N := N / sum(N)]
+      }
+      p <- expr(plot_ly(
+        x = tmp1[[input$selectcol1]], 
+        y = tmp1[[input$selectcol2]], 
+        z = tmp1[["N"]], 
+        type = "heatmap"
       ))
     }
     last_plot_call(deparse(p))
@@ -107,8 +127,14 @@ shinyServer(function(input, output) {
         output[[2]] <- tagList()
         output[[1]][[1]] <- selectInput("scatter_mode", "Mode", choices = c("lines", "markers", "lines+markers"))
         output[[1]][[2]] <- selectInput("scatter_size", "Size", choices = c("None", colnames(mydata())))
+      } else if (input$selectplottype == "bar") {
+        output[[1]] <- tagList()
+        output[[1]][[1]] <- selectInput("bar_mode", "Barmode", choices = c("stack", "group"))
+      } else if (input$selectplottype == "heatmap") {
+        output[[1]] <- tagList()
+        output[[1]][[1]] <- selectInput("heatmap_mode", label = "Count mode", choices = c("absolute", "relative"))
       }
-    }
+    } 
       
     output
   })
