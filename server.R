@@ -1,5 +1,6 @@
 source("config.R")
 
+
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   
@@ -106,7 +107,7 @@ shinyServer(function(input, output) {
       ))
     }
     last_plot_call(deparse(p))
-    eval(p)
+    eval(p) %>% add_layout()
     
   })
   

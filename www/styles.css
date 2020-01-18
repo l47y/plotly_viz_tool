@@ -60,6 +60,7 @@ H4 {
 .selectize-dropdown-content {
   background-color: var(--grey3);
   color: white;
+  border: 0px;
 }
 
 .selectize-input.full {

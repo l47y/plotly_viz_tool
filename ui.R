@@ -32,6 +32,7 @@ shinyUI(fluidPage(
     column(
       4,
       wellPanel(
+        h4("Setup for plot"),
         class = "myPanel",
         uiOutput("plot_setup")
       )
@@ -42,8 +43,11 @@ shinyUI(fluidPage(
     
   
   fluidRow(
-    plotlyOutput("mainplot"),
-    textOutput("plot_call")
+    wellPanel(
+      class = "myPanel",
+      plotlyOutput("mainplot"),
+      textOutput("plot_call")
+    )
   )
   
 ))
