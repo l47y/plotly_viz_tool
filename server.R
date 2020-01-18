@@ -1,7 +1,4 @@
-library(shinyjs)
-library(shiny)
-library(readr)
-library(data.table)
+source("config.R")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {

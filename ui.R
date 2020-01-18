@@ -1,6 +1,4 @@
-library(plotly)
-library(shiny)
-library(shinydashboard)
+source("config.R")
 
 shinyUI(fluidPage(
   theme = "styles.css",
