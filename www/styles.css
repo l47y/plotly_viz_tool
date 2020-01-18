@@ -86,3 +86,16 @@ H4 {
   color: white;
 }
 
+.minButton {
+  background-color: var(--clicked_select);
+  border: 0px;
+  color: white;
+}
+
+.minButton:hover {
+  background-color: var(--clicked_select);
+  border: 0px;
+  color: white;
+  border-radius: 50%;
+}
+

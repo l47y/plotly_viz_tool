@@ -11,7 +11,7 @@ shinyUI(fluidPage(
       4, 
       wellPanel(
         class = "myPanel",
-        id = "filePanelid",
+        id = "filePanel",
         h4("Choose data", class = "panelHeader"),
         fileInput("datainput", "Choose file", multiple = FALSE, accept = NULL, width = NULL),
         selectInput("datainput2", "Or select from list", choices = c("None", "iris")),
@@ -22,7 +22,7 @@ shinyUI(fluidPage(
       4,
       wellPanel(
         class = "myPanel", 
-        id = "columnPanelid",
+        id = "columnPanel",
         h4("Select columns"),
         uiOutput("col1"),
         uiOutput("col2"),
@@ -30,11 +30,21 @@ shinyUI(fluidPage(
       )
     ),
     column(
-      4,
+      3,
       wellPanel(
         h4("Setup for plot"),
         class = "myPanel",
+        id = "setupPanel",
         uiOutput("plot_setup")
+      )
+    ),
+    column(
+      1,
+      circleButton(
+        inputId = "minimizeButton", 
+        label = "minimize",
+        icon = icon("arrow-up"),
+        class = "minButton"
       )
     )
       

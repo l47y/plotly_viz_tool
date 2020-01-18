@@ -6,6 +6,7 @@ library(shinydashboard)
 library(shinyjs)
 library(shinymaterial)
 library(magrittr)
+library(shinyWidgets)
 
 plot_axisfontstyle <- list(color = 'white')
 plot_axisstyle <- list(tickfont = plot_axisfontstyle, showgrid = FALSE)

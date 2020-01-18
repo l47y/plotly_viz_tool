@@ -36,6 +36,12 @@ shinyServer(function(input, output) {
     }
   })
   
+  observeEvent(input$minimizeButton, {
+    shinyjs::toggle(id = "filePanel", anim = TRUE)
+    shinyjs::toggle(id = "columnPanel", anim = TRUE)
+    shinyjs::toggle(id = "setupPanel", anim = TRUE)
+  })
+  
   
   output$col1 <- renderUI({
     if (!is.null(mydata())) {
