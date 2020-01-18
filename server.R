@@ -11,11 +11,14 @@ shinyServer(function(input, output) {
     if (!is.null(input$datainput)) {
       mydata(as.data.table(read_csv(input$datainput$datapath)))
     }
+   })
+  
+  observe ({
     if (input$datainput2 != "None") {
       tmp <- eval(parse(text = input$datainput2))
       mydata(as.data.table(tmp))
     }
-   })
+  })
   
   observe({
     if (length(input$selectplottype) > 0) {

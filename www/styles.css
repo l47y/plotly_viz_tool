@@ -2,6 +2,8 @@
 	  --grey1: #202020;
 	  --grey2: #242424;
 	  --grey3: #343434;
+	  
+	  --clicked_select: #6a0572;
 	}
 
 
@@ -75,4 +77,12 @@ H4 {
   border: 0px;
 }
 
+.selectize-dropdown, .selectize-dropdown.form-control {
+  border: 0px;
+}
+
+.selectize-control.single .selectize-input.input-active {
+  background-color: var(--clicked_select);
+  color: white;
+}
 
