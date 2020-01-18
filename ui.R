@@ -55,7 +55,7 @@ shinyUI(fluidPage(
   fluidRow(
     wellPanel(
       class = "myPanel",
-      plotlyOutput("mainplot"),
+      plotlyOutput("mainplot", width = "100%", height = "100%"),
       textOutput("plot_call")
     )
   )

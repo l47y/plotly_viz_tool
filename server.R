@@ -6,6 +6,7 @@ shinyServer(function(input, output) {
   
   mydata <- reactiveVal(NULL)
   last_plot_call <- reactiveVal(NULL)
+  plot_height <- reactiveVal("100%")
   
   observe ({
     if (!is.null(input$datainput)) {
@@ -40,6 +41,7 @@ shinyServer(function(input, output) {
     shinyjs::toggle(id = "filePanel", anim = TRUE)
     shinyjs::toggle(id = "columnPanel", anim = TRUE)
     shinyjs::toggle(id = "setupPanel", anim = TRUE)
+    plot_height(1000)
   })
   
   
@@ -116,8 +118,7 @@ shinyServer(function(input, output) {
       ))
     }
     last_plot_call(deparse(p))
-    eval(p) %>% add_layout()
-    
+    eval(p) %>% add_layout() %>% layout(height = "100%")
   })
   
   output$plot_call <- renderText({
