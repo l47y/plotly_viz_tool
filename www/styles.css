@@ -1,17 +1,77 @@
+:root {
+	  --grey1: #202020;
+	  --grey2: #242424;
+	  --grey3: #343434;
+	}
+
+
 body {
-  /*background-color: #404040;
-  color: white;*/
+  background-color: var(--grey1);
+  color: white;
   padding-left: 10%;
   padding-right: 10%;
   padding-top: 2%;
 }
 
 .myPanel {
-  background-color: #EFF8CD;
+  background-color: var(--grey2);
+  border-radius: 0px;
+  border: 0px;
 }
 
+.shinyjs-resettable {
+  background-color: var(--grey3);
+}
 
+.selectize-input {
+  background-color: #343434;
+  color: white;
+}
+
+.div.selectize-control.shinyjs-resettable.single {
+  background-color: blue;
+}
 
 H4 {
   text-align: center;
 }
+
+
+.btn.btn-default.btn-file {
+  background-color: var(--grey3);
+  color: white;
+  border: 0px;
+}
+
+.input-group .form-control {
+  background-color: var(--grey3);
+  color: white;
+  border: 0px;
+}
+
+.selectize-control.shinyjs-resettable.single {
+  background-color: var(--grey3);
+}
+
+.selectize-input.items.full.has-options.has-items {
+  background-color: --var(grey3);
+}
+
+.selectize-dropdown-content {
+  background-color: var(--grey3);
+  color: white;
+}
+
+.selectize-input.full {
+  background-color: var(--grey3);
+  color: white;
+  border: 0px;
+}
+
+.selectize-input.input-active {
+  background: var(--grey3);
+  color: white;
+  border: 0px;
+}
+
+

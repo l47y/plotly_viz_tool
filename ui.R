@@ -31,7 +31,10 @@ shinyUI(fluidPage(
     ),
     column(
       4,
-      uiOutput("plot_setup")
+      wellPanel(
+        class = "myPanel",
+        uiOutput("plot_setup")
+      )
     )
       
     
