@@ -2,11 +2,13 @@ source("config.R")
 
 
 # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   
   mydata <- reactiveVal(NULL)
   last_plot_call <- reactiveVal(NULL)
   plot_height <- reactiveVal("100%")
+  minimize_btn_state <- reactiveVal("up")
+  
   
   observe ({
     if (!is.null(input$datainput)) {
@@ -41,7 +43,13 @@ shinyServer(function(input, output) {
     shinyjs::toggle(id = "filePanel", anim = TRUE)
     shinyjs::toggle(id = "columnPanel", anim = TRUE)
     shinyjs::toggle(id = "setupPanel", anim = TRUE)
-    plot_height(1000)
+    if (minimize_btn_state() == "up") {
+      updateActionButton(session, "minimizeButton", icon = icon("arrow-down"))
+      minimize_btn_state("down")
+    } else {
+      updateActionButton(session, "minimizeButton", icon = icon("arrow-up"))
+      minimize_btn_state("up")
+    }
   })
   
   
