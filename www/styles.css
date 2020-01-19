@@ -10,7 +10,7 @@
 body {
   background-color: var(--grey1);
   color: white;
-  padding-left: 10%;
+  padding-left: 5%;
   padding-right: 10%;
   padding-top: 2%;
 }
@@ -97,5 +97,26 @@ H4 {
   border: 0px;
   color: white;
   border-radius: 50%;
+}
+
+.btn.btn-circla {
+  width: 100px;
+  height: 100px;
+}
+
+.btn.btn-circle-lg {
+  color: white;
+  background-color: var(--clicked_select);
+  margin: 5px;
+  border: 0px;
+  font-size: 18px;
+  border-radius: 10%;
+}
+
+.btn.btn-circle-lg:hover {
+  background-color: var(--grey1);
+  font-size: 24px;
+
+  
 }
 

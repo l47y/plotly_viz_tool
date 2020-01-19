@@ -52,6 +52,16 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  observeEvent(input$btn_basic, {
+    shinyjs::show(id = "basicPanelColumn")
+    shinyjs::hide(id = "advancedPanelColumn")
+  })
+  
+  observeEvent(input$btn_layout, {
+    shinyjs::hide(id = "basicPanelColumn")
+    shinyjs::show(id = "advancedPanelColumn")
+  })
+  
   
   output$col1 <- renderUI({
     if (!is.null(mydata())) {
