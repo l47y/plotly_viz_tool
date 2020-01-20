@@ -139,3 +139,22 @@ element.style {
   border: 0px;
 }
 
+.downloadButton {
+  background-color: var(--grey1);
+  color: var(--grey1);
+  border: 0px;
+  border-color: var(--grey1);
+  font-size: 0px;
+  width: 0px;
+  height: 0px;
+}
+.downloadButton:hover {
+  background-color: var(--grey2);
+  color: var(--grey1);
+  border: 0px;
+  font-size: 0px;
+  width: 0px;
+  height: 0px;
+}
+
+

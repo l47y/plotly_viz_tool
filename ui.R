@@ -33,6 +33,20 @@ shinyUI(fluidPage(
             )
           )
         ),
+        fluidRow(
+          column(
+            12,
+            hidden(
+              circleButton("btn_download", icon = icon("download"), size = "lg")
+            )
+          )
+        ),
+        fluidRow(
+          column(
+            12,
+            downloadButton("btn_download_real", label = "", class = "downloadButton", icon = NULL)
+          )
+        ),
         align = "center",
         style = "height: 100%;"
       )

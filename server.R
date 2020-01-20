@@ -3,14 +3,16 @@ source("config.R")
 
 shinyServer(function(input, output, session) {
   
+
+  
   mydata <- reactiveVal(NULL)
   last_plot_call <- reactiveVal(NULL)
-  plot_height <- reactiveVal("100%")
   minimize_btn_state <- reactiveVal("up")
   btn_showdata_label <- reactiveVal("Data")
   updated_layout <- reactiveVal(NULL)
   current_panel <- reactiveVal("Basic")
   
+
   
   show_stuff_on_load <- function() {
     shinyjs::show(id = "btn_showdata")
@@ -18,8 +20,21 @@ shinyServer(function(input, output, session) {
     shinyjs::show(id = "columnPanel")
     shinyjs::show(id = "setupPanel")
     shinyjs::show(id = "minimizeButton")
+    shinyjs::show(id = "btn_download")
   }
   
+  observeEvent(input$btn_download, {
+    click("btn_download_real")
+  })
+  
+  output$btn_download_real <- downloadHandler(
+    filename = function() {
+      paste("plot-", Sys.Date(), ".html")
+    },
+    content = function(file) {
+      htmlwidgets::saveWidget(as_widget(render_plot()), file, selfcontained = TRUE, background = "#202020")
+    }
+  )
   
   observe ({
     if (!is.null(input$datainput)) {
@@ -123,61 +138,66 @@ shinyServer(function(input, output, session) {
 
   
   output$mainplot <- renderPlotly({
+    render_plot()
+  })
+  
+  output$plot_call <- renderText({
+    print(last_plot_call())
+  })
+  
+  render_plot <- reactive({
     if (is.null(mydata())) {
       return(NULL)    
     }
     tmp <- mydata()
     
     if (input$selectplottype == "scatter") {
-      p <- expr(plot_ly(
+      p <- plot_ly(
         x = tmp[[input$selectcol1]],
         y = tmp[[input$selectcol2]], 
         type = "scatter", 
         color = tmp[[input$selectcol3]],
         mode = input$scatter_mode,
         size = tmp[[input$scatter_size]]
-      ))
+      )
     } else if (input$selectplottype == "bar") {
-      p <- expr(plot_ly(
+      p <- plot_ly(
         x = tmp[[input$selectcol1]],
         y = tmp[[input$selectcol2]], 
         type = "bar", 
         barmode = input$bar_mode,
         color = tmp[[input$selectcol3]]
-      ) %>% layout(barmode = input$bar_mode))
+      ) %>% layout(barmode = input$bar_mode)
     } else if (input$selectplottype == "histogram") {
-      p <- expr(plot_ly(
+      p <- plot_ly(
         x = tmp[[input$selectcol1]],
         type = "histogram", 
         color = tmp[[input$selectcol3]]
-      ))
+      )
     } else if (input$selectplottype == "pie") {
-      p <- expr(plot_ly(
+      p <- plot_ly(
         labels = tmp[[input$selectcol1]],
         values = tmp[[input$selectcol1]],
         type = "pie"
-      ))
+      )
     } else if (input$selectplottype == "heatmap") {
       tmp1 <- tmp[, .N, c(input$selectcol1, input$selectcol2)]
       if (input$heatmap_mode == "percentage") {
         tmp1[, N := N / sum(N)]
       }
-      p <- expr(plot_ly(
+      p <- plot_ly(
         x = tmp1[[input$selectcol1]], 
         y = tmp1[[input$selectcol2]], 
         z = tmp1[["N"]], 
         type = "heatmap"
-      ))
+      )
     }
-    last_plot_call(deparse(p))
-    final_plot <- eval(p) %>% add_layout() %>% layout(height = "100%") 
+    last_plot_call(deparse(expr(p)))
+    final_plot <- p %>% add_layout() %>% layout(height = "100%") 
     my_layout <- updated_layout()
     my_layout[["p"]] <- final_plot
     do.call(layout, my_layout)
-  })
-  
-  output$plot_call <- renderText({
-    print(last_plot_call())
+    
   })
   
   output$plot_setup <- renderUI({

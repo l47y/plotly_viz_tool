@@ -7,6 +7,7 @@ library(shinyjs)
 library(shinymaterial)
 library(magrittr)
 library(shinyWidgets)
+library(htmlwidgets)
 library(DT)
 
 plot_axisfontstyle <- list(color = 'white')
