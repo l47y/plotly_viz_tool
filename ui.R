@@ -16,7 +16,7 @@ shinyUI(fluidPage(
         fluidRow(
           column(
             12,
-            circleButton("btn_basic", "Basic", size = "lg")
+            circleButton("btn_basic", icon = icon("home"), size = "lg")
           )
         ),
         fluidRow(
@@ -28,7 +28,9 @@ shinyUI(fluidPage(
         fluidRow(
           column(
             12,
-            circleButton("btn_showdata", "Data", size = "lg")
+            hidden(
+              circleButton("btn_showdata", "Data", size = "lg")
+            )
           )
         ),
         align = "center",
@@ -90,8 +92,12 @@ shinyUI(fluidPage(
               )
             ),
             column(
-              1,
-              actionButton("update_layout", "Update", class = "btn_updatelayout")
+              4,
+              wellPanel(
+                class = "myPanel", 
+                id = "updateLayoutPanel",
+                actionButton("update_layout", "Update", class = "btn_updatelayout")
+              )
               
             )
           )

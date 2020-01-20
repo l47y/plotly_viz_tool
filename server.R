@@ -9,18 +9,21 @@ shinyServer(function(input, output, session) {
   minimize_btn_state <- reactiveVal("up")
   btn_showdata_label <- reactiveVal("Data")
   updated_layout <- reactiveVal(NULL)
+  current_panel <- reactiveVal("Basic")
   
   
   observe ({
     if (!is.null(input$datainput)) {
       mydata(as.data.table(read_csv(input$datainput$datapath)))
     }
+    shinyjs::show(id = "btn_showdata")
    })
   
   observe ({
     if (input$datainput2 != "None") {
       tmp <- eval(parse(text = input$datainput2))
       mydata(as.data.table(tmp))
+      shinyjs::show(id = "btn_showdata")
     }
   })
   
@@ -44,6 +47,9 @@ shinyServer(function(input, output, session) {
     shinyjs::toggle(id = "filePanel", anim = TRUE)
     shinyjs::toggle(id = "columnPanel", anim = TRUE)
     shinyjs::toggle(id = "setupPanel", anim = TRUE)
+    shinyjs::toggle(id = "axisAndTitlePanel", anim = TRUE)
+    shinyjs::toggle(id = "updateLayoutPanel", anim = TRUE)
+    
     if (minimize_btn_state() == "up") {
       updateActionButton(session, "minimizeButton", icon = icon("arrow-down"))
       minimize_btn_state("down")
@@ -61,6 +67,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$btn_layout, {
     shinyjs::hide(id = "basicPanelColumn")
     shinyjs::show(id = "advancedPanelColumn")
+    current_panel("Layout")
   })
   
   observeEvent(input$btn_showdata, {
@@ -69,6 +76,7 @@ shinyServer(function(input, output, session) {
     newlabel <- if (btn_showdata_label() == "Data") "Plot" else "Data"
     btn_showdata_label(newlabel)
     updateActionButton(session, "btn_showdata", label = newlabel)
+    current_panel("dataplot")
   })
   
   observeEvent(input$update_layout, {
