@@ -12,18 +12,27 @@ shinyServer(function(input, output, session) {
   current_panel <- reactiveVal("Basic")
   
   
+  show_stuff_on_load <- function() {
+    shinyjs::show(id = "btn_showdata")
+    shinyjs::show(id = "plotPanel")
+    shinyjs::show(id = "columnPanel")
+    shinyjs::show(id = "setupPanel")
+    shinyjs::show(id = "minimizeButton")
+  }
+  
+  
   observe ({
     if (!is.null(input$datainput)) {
       mydata(as.data.table(read_csv(input$datainput$datapath)))
+      show_stuff_on_load()
     }
-    shinyjs::show(id = "btn_showdata")
    })
   
   observe ({
     if (input$datainput2 != "None") {
       tmp <- eval(parse(text = input$datainput2))
       mydata(as.data.table(tmp))
-      shinyjs::show(id = "btn_showdata")
+      show_stuff_on_load()
     }
   })
   

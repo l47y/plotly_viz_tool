@@ -56,22 +56,26 @@ shinyUI(fluidPage(
           ), 
           column(
             4,
-            wellPanel(
-              class = "myPanel", 
-              id = "columnPanel",
-              h4("Select columns"),
-              uiOutput("col1"),
-              uiOutput("col2"),
-              uiOutput("col3")
+            hidden(
+              wellPanel(
+                class = "myPanel", 
+                id = "columnPanel",
+                h4("Select columns"),
+                uiOutput("col1"),
+                uiOutput("col2"),
+                uiOutput("col3")
+              )
             )
           ),
           column(
-            3,
-            wellPanel(
-              h4("Setup for plot"),
-              class = "myPanel",
-              id = "setupPanel",
-              uiOutput("plot_setup")
+            4,
+            hidden(
+              wellPanel(
+                h4("Setup for plot"),
+                class = "myPanel",
+                id = "setupPanel",
+                uiOutput("plot_setup")
+              )
             )
           )
         ),
@@ -105,23 +109,27 @@ shinyUI(fluidPage(
         
         column(
           1,
-          circleButton(
-            inputId = "minimizeButton", 
-            label = "minimize",
-            icon = icon("arrow-up"),
-            class = "minButton"
+          hidden(
+            circleButton(
+              inputId = "minimizeButton", 
+              label = "minimize",
+              icon = icon("arrow-up"),
+              class = "minButton"
+            )
           )
         )
       ),
     
       fluidRow(
         column(
-          12,      
-          wellPanel(
-            class = "myPanel",
-            id = "plotPanel",
-            plotlyOutput("mainplot", width = "100%", height = "100%"),
-            textOutput("plot_call")
+          12,  
+          hidden(
+            wellPanel(
+              class = "myPanel",
+              id = "plotPanel",
+              plotlyOutput("mainplot", width = "100%", height = "100%"),
+              textOutput("plot_call")
+            )
           )
         ),
         column(
