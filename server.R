@@ -8,6 +8,7 @@ shinyServer(function(input, output, session) {
   last_plot_call <- reactiveVal(NULL)
   plot_height <- reactiveVal("100%")
   minimize_btn_state <- reactiveVal("up")
+  btn_showdata_label <- reactiveVal("Data")
   
   
   observe ({
@@ -60,6 +61,14 @@ shinyServer(function(input, output, session) {
   observeEvent(input$btn_layout, {
     shinyjs::hide(id = "basicPanelColumn")
     shinyjs::show(id = "advancedPanelColumn")
+  })
+  
+  observeEvent(input$btn_showdata, {
+    shinyjs::toggle(id = "plotPanel")
+    shinyjs::toggle(id = "showdataPanel")
+    newlabel <- if (btn_showdata_label() == "Data") "Plot" else "Data"
+    btn_showdata_label(newlabel)
+    updateActionButton(session, "btn_showdata", label = newlabel)
   })
   
   
@@ -163,6 +172,15 @@ shinyServer(function(input, output, session) {
     } 
       
     output
+  })
+  
+  output$showdata <- renderDataTable({
+    print(head(mydata()))
+    DT::datatable(mydata(), rownames = FALSE, options = list(
+      autowidth = F, scrollY = T, searching = T, searchHighlight = T, pageLength = 20
+    )) %>% DT::formatStyle(columns = colnames(mydata()), backgroundColor = "#242424", border = "0px")
+
+    
   })
   
 })

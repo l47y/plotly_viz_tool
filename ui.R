@@ -25,6 +25,12 @@ shinyUI(fluidPage(
             circleButton("btn_layout", "Layout", size = "lg")
           )
         ),
+        fluidRow(
+          column(
+            12,
+            circleButton("btn_showdata", "Data", size = "lg")
+          )
+        ),
         align = "center",
         style = "height: 100%;"
       )
@@ -92,8 +98,19 @@ shinyUI(fluidPage(
           12,      
           wellPanel(
             class = "myPanel",
+            id = "plotPanel",
             plotlyOutput("mainplot", width = "100%", height = "100%"),
             textOutput("plot_call")
+          )
+        ),
+        column(
+          12,
+          hidden(
+            wellPanel(
+              class = "myPanel", 
+              id = "showdataPanel",
+              DT::dataTableOutput("showdata")
+            )
           )
         )
       )

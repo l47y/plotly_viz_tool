@@ -4,6 +4,7 @@
 	  --grey3: #343434;
 	  
 	  --clicked_select: #6a0572;
+	  --menu_hover: #7000cc
 	}
 
 
@@ -114,9 +115,7 @@ H4 {
 }
 
 .btn.btn-circle-lg:hover {
-  background-color: var(--grey1);
+  background-color: var(--menu_hover);
   font-size: 24px;
-
-  
 }
 
