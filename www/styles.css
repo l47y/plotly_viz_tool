@@ -2,6 +2,7 @@
 	  --grey1: #202020;
 	  --grey2: #242424;
 	  --grey3: #343434;
+	  --grey4: #404040;
 	  
 	  --clicked_select: #6a0572;
 	  --menu_hover: #7000cc
@@ -117,5 +118,24 @@ H4 {
 .btn.btn-circle-lg:hover {
   background-color: var(--menu_hover);
   font-size: 24px;
+}
+
+
+element.style {
+}
+.shinyjs-resettable {
+    background-color: var(--grey3);
+}
+
+.form-control.shinyjs-resettable {
+  color: white;
+  background-color: var(--grey3);
+  border: 0px;
+}
+
+.btn_updatelayout {
+  background-color: var(--clicked_select);
+  color: white;
+  border: 0px;
 }
 

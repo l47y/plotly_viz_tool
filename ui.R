@@ -78,7 +78,22 @@ shinyUI(fluidPage(
           column(
             11,
             id = "advancedPanelColumn", 
-            selectInput("aosidj", "asipodj", choices = "aosidj")
+            column(
+              4,
+              wellPanel(
+                class = "myPanel",
+                id = "axisAndTitlePanel",
+                h4("Axis and title"),
+                textInput("layout_title", "Title"),
+                textInput("layout_xaxis", "X-axis"),
+                textInput("layout_yaxis", "Y-axis")
+              )
+            ),
+            column(
+              1,
+              actionButton("update_layout", "Update", class = "btn_updatelayout")
+              
+            )
           )
         ),
         

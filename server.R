@@ -1,7 +1,6 @@
 source("config.R")
 
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output, session) {
   
   mydata <- reactiveVal(NULL)
@@ -9,6 +8,7 @@ shinyServer(function(input, output, session) {
   plot_height <- reactiveVal("100%")
   minimize_btn_state <- reactiveVal("up")
   btn_showdata_label <- reactiveVal("Data")
+  updated_layout <- reactiveVal(NULL)
   
   
   observe ({
@@ -71,6 +71,13 @@ shinyServer(function(input, output, session) {
     updateActionButton(session, "btn_showdata", label = newlabel)
   })
   
+  observeEvent(input$update_layout, {
+    layout_args <- list()
+    layout_args[["title"]] <- if (!is.null(input$layout_title)) input$layout_title else NULL
+    layout_args[["xaxis"]] <- if (!is.null(input$layout_title)) list(title = input$layout_xaxis) else NULL
+    layout_args[["yaxis"]] <- if (!is.null(input$layout_title)) list(title = input$layout_yaxis) else NULL
+    updated_layout(layout_args)
+  })
   
   output$col1 <- renderUI({
     if (!is.null(mydata())) {
@@ -96,6 +103,7 @@ shinyServer(function(input, output, session) {
                   choices = c("scatter", "bar", "histogram", "pie", "heatmap"))
     }
   })
+
   
   output$mainplot <- renderPlotly({
     if (is.null(mydata())) {
@@ -145,7 +153,10 @@ shinyServer(function(input, output, session) {
       ))
     }
     last_plot_call(deparse(p))
-    eval(p) %>% add_layout() %>% layout(height = "100%")
+    final_plot <- eval(p) %>% add_layout() %>% layout(height = "100%") 
+    my_layout <- updated_layout()
+    my_layout[["p"]] <- final_plot
+    do.call(layout, my_layout)
   })
   
   output$plot_call <- renderText({
