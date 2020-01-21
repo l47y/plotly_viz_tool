@@ -9,6 +9,9 @@ library(magrittr)
 library(shinyWidgets)
 library(htmlwidgets)
 library(DT)
+library(colourpicker)
+
+source("helpers.R")
 
 plot_axisfontstyle <- list(color = 'white')
 plot_axisstyle <- list(tickfont = plot_axisfontstyle, showgrid = FALSE)

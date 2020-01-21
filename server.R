@@ -155,7 +155,7 @@ shinyServer(function(input, output, session) {
   output$plottype <- renderUI({
     if (!is.null(mydata())) {
       selectInput("selectplottype", "Type of plot", 
-                  choices = c("scatter", "bar", "histogram", "pie", "heatmap"))
+                  choices = c("scatter", "bar", "histogram", "pie", "heatmap", "sankey"))
     }
   })
 
@@ -215,6 +215,8 @@ shinyServer(function(input, output, session) {
         z = tmp1[["N"]], 
         type = "heatmap"
       )
+    } else if (input$selectplottype == "sankey") {
+      p <- make_sankey(mydata(), input$sankey_columns)
     }
     last_plot_call(deparse(expr(p)))
     final_plot <- p %>% add_layout() 
@@ -240,6 +242,12 @@ shinyServer(function(input, output, session) {
       } else if (input$selectplottype == "heatmap") {
         output[[1]] <- tagList()
         output[[1]][[1]] <- selectInput("heatmap_mode", label = "Count mode", choices = c("absolute", "relative"))
+      } else if (input$selectplottype == "sankey") {
+        output[[1]] <- tagList()
+        char_cols <- get_column_types(mydata())$char
+        output[[1]][[1]] <- selectInput("sankey_columns", label = "Select columns", 
+                                        choices = char_cols, multiple = TRUE, 
+                                        selected = char_cols[1:2])
       }
     } 
       
