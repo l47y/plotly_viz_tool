@@ -4,6 +4,7 @@ shinyUI(fluidPage(
   includeCSS("www/styles.css"),
   useShinyjs(),  
   tags$head(tags$style("#mainplot{height:100% !important;}")),
+  tags$head(tags$style(HTML('#asd :after, :#asd before{background-color:#bff442;}'))),
   
   fluidRow(
     
@@ -111,16 +112,19 @@ shinyUI(fluidPage(
                 textInput("layout_yaxis", "Y-axis")
               )
             ),
-            # column(
-            #   4,
-            #   wellPanel(
-            #     class = "myPanel",
-            #     id = "sizePanel",
-            #     h4("Size"),
-            #     sliderInput("layout_width", "Width", min = 1, max = 5, value = 3),
-            #     sliderInput("layout_height", "Height", min = 1, max = 5, value = 3)
-            #   )
-            # ),
+            column(
+              4,
+              wellPanel(
+                class = "myPanel",
+                id = "gridPanel",
+                h4("Grid"),
+                
+
+                checkboxInput("xaxisgrid", "X"),
+                
+                checkboxInput("yaxisgrid", "Y")
+              )
+            ),
             column(
               4,
               wellPanel(

@@ -52,6 +52,21 @@ shinyServer(function(input, output, session) {
   })
   
   observe({
+    tmp <- updated_layout()
+    if (input$xaxisgrid == TRUE){
+      tmp[["xaxis"]] <- list(showgrid = TRUE)
+    } else {
+      tmp[["xaxis"]] <- list(showgrid = FALSE)
+    }
+    if (input$yaxisgrid == TRUE){
+      tmp[["yaxis"]] <- list(showgrid = TRUE)
+    } else {
+      tmp[["yaxis"]] <- list(showgrid = FALSE)
+    }
+    updated_layout(tmp)
+  })
+  
+  observe({
     if (length(input$selectplottype) > 0) {
       if (input$selectplottype %in% c("histogram", "pie")) {
         shinyjs::hide("selectcol2")
