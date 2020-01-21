@@ -131,6 +131,7 @@ shinyServer(function(input, output, session) {
     current_panel("Layout")
   })
   
+  
   observeEvent(input$btn_showdata, {
     shinyjs::toggle(id = "plotPanel")
     shinyjs::toggle(id = "showdataPanel")
@@ -190,14 +191,30 @@ shinyServer(function(input, output, session) {
     tmp <- mydata()
     
     if (input$selectplottype == "scatter") {
-      p <- plot_ly(
+      arg_list <- list(
         x = tmp[[input$selectcol1]],
         y = tmp[[input$selectcol2]], 
         type = "scatter", 
         color = tmp[[input$selectcol3]],
+        colors = cybereon,
         mode = input$scatter_mode,
         size = tmp[[input$scatter_size]]
       )
+      if (!is.null(input$selectcol3)) {
+        if (input$selectcol3 == "None") {
+          marker_conf = list(color = cybereon[1])
+          line_conf = list(color = cybereon[1])
+          if (input$scatter_mode == "lines") {
+            arg_list[["line"]] = line_conf
+          } else if (input$scatter_mode == "markers") {
+            arg_list[["marker"]] = marker_conf
+          } else {
+            arg_list[["line"]] = line_conf
+            arg_list[["marker"]] = marker_conf
+          }
+        }
+      }
+      p <- do.call(plot_ly, arg_list)
     } else if (input$selectplottype == "bar") {
       p <- plot_ly(
         x = tmp[[input$selectcol1]],

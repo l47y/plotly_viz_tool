@@ -29,5 +29,5 @@ add_layout <- function(p) {
 
 
 
-
+cybereon <- c("#ff008d", "#ff6666",	"#ffb58c", "#a8fff8", "#16ffd6")
 
