@@ -9,7 +9,7 @@ library(magrittr)
 library(shinyWidgets)
 library(htmlwidgets)
 library(DT)
-library(colourpicker)
+library(RColorBrewer)
 
 source("helpers.R")
 

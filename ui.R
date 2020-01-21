@@ -123,13 +123,23 @@ shinyUI(fluidPage(
               )
             ),
             column(
-              4,
+              2,
               wellPanel(
                 class = "myPanel",
                 id = "gridPanel",
                 h4("Grid"),
                 checkboxInput("xaxisgrid", "X"),
                 checkboxInput("yaxisgrid", "Y")
+              )
+            ),
+            column(
+              2,
+              wellPanel(
+                class = "myPanel",
+                id = "colorPanel",
+                h4("Colors"),
+                selectInput("select_colorpal", "Select palette", 
+                            choices = c("cybereon", rownames(brewer.pal.info)))
               )
             )
           )

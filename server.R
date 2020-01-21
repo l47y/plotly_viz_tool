@@ -190,13 +190,19 @@ shinyServer(function(input, output, session) {
     }
     tmp <- mydata()
     
+    if (input$select_colorpal %in% c("cybereon")) {
+      my_palette <- eval(parse(text = input$select_colorpal))
+    } else {
+      my_palette <- input$select_colorpal
+    }
+    
     if (input$selectplottype == "scatter") {
       arg_list <- list(
         x = tmp[[input$selectcol1]],
         y = tmp[[input$selectcol2]], 
         type = "scatter", 
         color = tmp[[input$selectcol3]],
-        colors = cybereon,
+        colors = my_palette,
         mode = input$scatter_mode,
         size = tmp[[input$scatter_size]]
       )
