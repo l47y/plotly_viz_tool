@@ -67,6 +67,12 @@ shinyServer(function(input, output, session) {
     }
   })
   
+  # get_plot_size <- reactive({
+  #   print(plot_width_dict[[as.character(input$layout_width)]])
+  #   plot_width_dict[[as.character(input$layout_width)]]
+  #   
+  # })
+  
   observeEvent(input$minimizeButton, {
     shinyjs::toggle(id = "filePanel", anim = TRUE)
     shinyjs::toggle(id = "columnPanel", anim = TRUE)
@@ -77,9 +83,11 @@ shinyServer(function(input, output, session) {
     if (minimize_btn_state() == "up") {
       updateActionButton(session, "minimizeButton", icon = icon("arrow-down"))
       minimize_btn_state("down")
+      runjs(paste0('$("#plotPanel").css("height","', 80, 'vh")'))
     } else {
       updateActionButton(session, "minimizeButton", icon = icon("arrow-up"))
       minimize_btn_state("up")
+      runjs(paste0('$("#plotPanel").css("height","', 50, 'vh")'))
     }
   })
   
@@ -138,12 +146,13 @@ shinyServer(function(input, output, session) {
 
   
   output$mainplot <- renderPlotly({
+    minimize_btn_state()
     render_plot()
   })
   
-  output$plot_call <- renderText({
-    print(last_plot_call())
-  })
+  # output$plot_call <- renderText({
+  #   print(last_plot_call())
+  # })
   
   render_plot <- reactive({
     if (is.null(mydata())) {
@@ -193,10 +202,10 @@ shinyServer(function(input, output, session) {
       )
     }
     last_plot_call(deparse(expr(p)))
-    final_plot <- p %>% add_layout() %>% layout(height = "100%") 
+    final_plot <- p %>% add_layout() 
     my_layout <- updated_layout()
     my_layout[["p"]] <- final_plot
-    do.call(layout, my_layout)
+    plotly::config(do.call(layout, my_layout), responsive = TRUE)
     
   })
   

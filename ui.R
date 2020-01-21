@@ -3,6 +3,8 @@ source("config.R")
 shinyUI(fluidPage(
   includeCSS("www/styles.css"),
   useShinyjs(),  
+  tags$head(tags$style("#mainplot{height:100% !important;}")),
+  
   fluidRow(
     
     
@@ -109,6 +111,16 @@ shinyUI(fluidPage(
                 textInput("layout_yaxis", "Y-axis")
               )
             ),
+            # column(
+            #   4,
+            #   wellPanel(
+            #     class = "myPanel",
+            #     id = "sizePanel",
+            #     h4("Size"),
+            #     sliderInput("layout_width", "Width", min = 1, max = 5, value = 3),
+            #     sliderInput("layout_height", "Height", min = 1, max = 5, value = 3)
+            #   )
+            # ),
             column(
               4,
               wellPanel(
@@ -141,7 +153,7 @@ shinyUI(fluidPage(
             wellPanel(
               class = "myPanel",
               id = "plotPanel",
-              plotlyOutput("mainplot", width = "100%", height = "100%"),
+              plotlyOutput("mainplot", height = "40vh"),
               textOutput("plot_call")
             )
           )

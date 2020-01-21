@@ -92,6 +92,7 @@ H4 {
   background-color: var(--clicked_select);
   border: 0px;
   color: white;
+  margin: 10px;
 }
 
 .minButton:hover {
