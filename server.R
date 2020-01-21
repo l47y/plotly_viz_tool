@@ -16,6 +16,7 @@ shinyServer(function(input, output, session) {
   
   show_stuff_on_load <- function() {
     shinyjs::show(id = "btn_showdata")
+    shinyjs::show(id = "btn_layout")
     shinyjs::show(id = "plotPanel")
     shinyjs::show(id = "columnPanel")
     shinyjs::show(id = "setupPanel")
@@ -42,6 +43,18 @@ shinyServer(function(input, output, session) {
       show_stuff_on_load()
     }
    })
+  
+  observe({
+    if ("selectplottype" %in% names(input)) {
+      if (!input$selectplottype %in% c("scatter", "heatmap", "sankey")) {
+        shinyjs::hide(id = "setupPanel")
+      } else {
+        shinyjs::show(id = "setupPanel")
+        
+      }
+    }
+  })
+  
   
   observe ({
     if (input$datainput2 != "None") {
@@ -94,6 +107,7 @@ shinyServer(function(input, output, session) {
     shinyjs::toggle(id = "setupPanel", anim = TRUE)
     shinyjs::toggle(id = "axisAndTitlePanel", anim = TRUE)
     shinyjs::toggle(id = "updateLayoutPanel", anim = TRUE)
+    shinyjs::toggle(id = "gridPanel", anim = TRUE)
     
     if (minimize_btn_state() == "up") {
       updateActionButton(session, "minimizeButton", icon = icon("arrow-down"))

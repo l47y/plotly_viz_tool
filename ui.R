@@ -12,8 +12,14 @@ shinyUI(fluidPage(
     column(
       1, 
       fluidRow(
+        tags$div("Plotly", style = "font-size: 34px; text-decoration: bold;")
+      ), 
+      fluidRow(
+        tags$div("Viz", style = "font-size: 34px; text-decoration: bold;")
+      ),
+      fluidRow(
         style = "height: 30%;",
-        br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br()
+        br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br()
       ),
       fluidRow(
         fluidRow(
@@ -25,7 +31,9 @@ shinyUI(fluidPage(
         fluidRow(
           column(
             12,
-            circleButton("btn_layout", "Layout", size = "lg")
+            hidden(
+              circleButton("btn_layout", "Layout", size = "lg")
+            )
           )
         ),
         fluidRow(
@@ -109,7 +117,9 @@ shinyUI(fluidPage(
                 h4("Axis and title"),
                 textInput("layout_title", "Title"),
                 textInput("layout_xaxis", "X-axis"),
-                textInput("layout_yaxis", "Y-axis")
+                textInput("layout_yaxis", "Y-axis"),
+                actionButton("update_layout", "Update", class = "btn_updatelayout")
+                
               )
             ),
             column(
@@ -118,21 +128,9 @@ shinyUI(fluidPage(
                 class = "myPanel",
                 id = "gridPanel",
                 h4("Grid"),
-                
-
                 checkboxInput("xaxisgrid", "X"),
-                
                 checkboxInput("yaxisgrid", "Y")
               )
-            ),
-            column(
-              4,
-              wellPanel(
-                class = "myPanel", 
-                id = "updateLayoutPanel",
-                actionButton("update_layout", "Update", class = "btn_updatelayout")
-              )
-              
             )
           )
         ),
