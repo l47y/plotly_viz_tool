@@ -150,13 +150,14 @@ shinyServer(function(input, output, session) {
   
   output$col2 <- renderUI({
     if (!is.null(mydata())) {
-      selectInput("selectcol2", "y-column", choices = colnames(mydata()))
+      selectInput("selectcol2", "y-column", choices = setdiff(colnames(mydata()), input$selectcol1))
     }
   })
   
   output$col3 <- renderUI({
     if (!is.null(mydata())) {
-      selectInput("selectcol3", "color-column", choices = c("None", colnames(mydata())))
+      selectInput("selectcol3", "color-column", choices = setdiff(c("None", colnames(mydata())), 
+                                                                  c(input$selectcol1, input$selectcol2)))
     }
   })
   
@@ -174,7 +175,7 @@ shinyServer(function(input, output, session) {
       if (input$selectplottype == "scatter") {
         output[[1]] <- tagList()
         output[[2]] <- tagList()
-        output[[1]][[1]] <- selectInput("scatter_mode", "Mode", choices = c("lines", "markers", "lines+markers"))
+        output[[1]][[1]] <- selectInput("scatter_mode", "Mode", choices = c("markers", "lines", "lines+markers"))
         output[[1]][[2]] <- selectInput("scatter_size", "Size", choices = c("None", colnames(mydata())))
       } else if (input$selectplottype == "bar") {
         output[[1]] <- tagList()
