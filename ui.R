@@ -1,14 +1,15 @@
 source("config.R")
 
 shinyUI(fluidPage(
+ 
+  # Initial settings of app 
   includeCSS("www/styles.css"),
   useShinyjs(),  
   tags$head(tags$style("#mainplot{height:100% !important;}")),
-  tags$head(tags$style(HTML('#asd :after, :#asd before{background-color:#bff442;}'))),
-  
+
   fluidRow(
-    
-    
+    # --------------------
+    # One column for the left menu and logo
     column(
       1, 
       fluidRow(
@@ -19,52 +20,59 @@ shinyUI(fluidPage(
       ),
       fluidRow(
         style = "height: 30%;",
-        br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br(), br()
+        br(), br(), br(), br(), br(), br(), br(), br()
       ),
-      fluidRow(
+      hidden(
         fluidRow(
-          column(
-            12,
-            circleButton("btn_basic", icon = icon("home"), size = "lg")
-          )
-        ),
-        fluidRow(
-          column(
-            12,
-            hidden(
+          id = "btn_row", 
+          fluidRow(
+            column(
+              12,
+              circleButton("btn_basic", icon = icon("home"), size = "lg")
+            )
+          ),
+          fluidRow(
+            column(
+              12,
               circleButton("btn_layout", "Layout", size = "lg")
             )
-          )
-        ),
-        fluidRow(
-          column(
-            12,
-            hidden(
+          ),
+          fluidRow(
+            column(
+              12,
               circleButton("btn_showdata", "Data", size = "lg")
             )
-          )
-        ),
-        fluidRow(
-          column(
-            12,
-            hidden(
+          ),
+          fluidRow(
+            column(
+              12,
               circleButton("btn_download", icon = icon("download"), size = "lg")
             )
-          )
-        ),
-        fluidRow(
-          column(
-            12,
-            downloadButton("btn_download_real", label = "", class = "downloadButton", icon = NULL)
-          )
-        ),
-        align = "center",
-        style = "height: 100%;"
+          ),
+          fluidRow(
+            column(
+              12,
+              # Trick to use another "transparent" thus invisible button which is clicked, because
+              # hidden elements cant be clicked (or at least I found no way to do it). This is done
+              # because I want all the left buttons to be equally styled and the download button per se
+              # looks very different from the others. 
+              downloadButton("btn_download_real", label = "", class = "downloadButton", icon = NULL)
+            )
+          ),
+          align = "center",
+          style = "height: 100%;"
+        )
       )
     ),
+    # --------------------
+    # 11 columns for the rest of the app 
     column(
       11,
+      # -------------------
+      # First row contains the settings panels and will be divided again in 11 / 1 columns
       fluidRow(
+        # -----------------------
+        # Using 11 columns for the actual panels  
         column(
           11,
           id = "basicPanelColumn",
@@ -146,6 +154,8 @@ shinyUI(fluidPage(
         ),
         
         column(
+          # -----------------------
+          # Using 1 columm for the minimize button 
           1,
           hidden(
             circleButton(
@@ -158,6 +168,9 @@ shinyUI(fluidPage(
         )
       ),
     
+      #-----------------------
+      # ----- Row for plot and table 
+      
       fluidRow(
         column(
           12,  

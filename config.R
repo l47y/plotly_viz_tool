@@ -13,6 +13,8 @@ library(RColorBrewer)
 
 source("helpers.R")
 
+# Set some layout and color stuff
+
 plot_axisfontstyle <- list(color = 'white')
 plot_axisstyle <- list(tickfont = plot_axisfontstyle, showgrid = FALSE)
 plot_titlefont <- list(size = 14, color = 'white')
@@ -26,8 +28,6 @@ add_layout <- function(p) {
                 margin = list(l = 40, r = 40, b = 40, t = 40))
   return(p)
 }
-
-
 
 cybereon <- c("#ff008d", "#ff6666",	"#ffb58c", "#a8fff8", "#16ffd6")
 

@@ -1,10 +1,8 @@
 
-ed = data.table("a" = sample(c("a", "b", "c"), replace = T, 1000), 
-                "b" = sample(c("d", "e", "f"), replace = T, 1000), 
-                "c" = sample(c("g", "h", "j"), replace = T, 1000), 
-                "d" = sample(c("g", "h", "j"), replace = T, 1000))
-
 make_sankey <- function(data, cols) {
+  # Produce a sankey diagramm based on an arbitrary number of columns. The connection between 
+  # two layers ( = two columns) will be the number of occurances of every combination of the 
+  # corresponding column values
   grouped_list <- list()
   for (i in 1:(length(cols) - 1)) {
     grouped_list[[i]] <- data[, .N, c(cols[i], cols[i + 1])]
@@ -47,6 +45,7 @@ make_sankey <- function(data, cols) {
 
 
 get_column_types <- function(data) {
+  # Get column types for every column of data 
   types <- sapply(data, class)
   numerics <- names(types)[types %in% c("numeric", "double", "integer")]
   factors <- names(types)[types %in% c("factor", "character")]
