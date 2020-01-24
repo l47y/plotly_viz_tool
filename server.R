@@ -101,6 +101,8 @@ shinyServer(function(input, output, session) {
     shinyjs::toggle(id = "axisAndTitlePanel", anim = FALSE)
     shinyjs::toggle(id = "updateLayoutPanel", anim = FALSE)
     shinyjs::toggle(id = "gridPanel", anim = FALSE)
+    shinyjs::toggle(id = "colorPanel", anim = FALSE)
+    print(input$scatter_mode)
     if (minimize_btn_state() == "up") {
       updateActionButton(session, "minimizeButton", icon = icon("arrow-down"))
       minimize_btn_state("down")
@@ -167,7 +169,6 @@ shinyServer(function(input, output, session) {
   
   # Render the plot setup panel depending on the selected plot type
   output$plot_setup <- renderUI({
-    minimize_btn_state() # trick to force rerendering of plot when minimizing upper panels to make plot larger
     output = tagList()
     if (length(input$selectplottype) > 0) {
       if (input$selectplottype == "scatter") {
@@ -205,6 +206,8 @@ shinyServer(function(input, output, session) {
     if (is.null(mydata())) {
       return(NULL)    
     }
+    
+    minimize_btn_state() # trick to force rerendering of plot when minimizing upper panels to make plot larger
     
     tmp <- mydata()
     
