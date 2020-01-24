@@ -95,12 +95,12 @@ shinyServer(function(input, output, session) {
   
   # Logic for minize Button: Hides or show upper panales, changes plot size and its icon 
   observeEvent(input$minimizeButton, {
-    shinyjs::toggle(id = "filePanel", anim = TRUE)
-    shinyjs::toggle(id = "columnPanel", anim = TRUE)
-    shinyjs::toggle(id = "setupPanel", anim = TRUE)
-    shinyjs::toggle(id = "axisAndTitlePanel", anim = TRUE)
-    shinyjs::toggle(id = "updateLayoutPanel", anim = TRUE)
-    shinyjs::toggle(id = "gridPanel", anim = TRUE)
+    shinyjs::toggle(id = "filePanel", anim = FALSE)
+    shinyjs::toggle(id = "columnPanel", anim = FALSE)
+    shinyjs::toggle(id = "setupPanel", anim = FALSE)
+    shinyjs::toggle(id = "axisAndTitlePanel", anim = FALSE)
+    shinyjs::toggle(id = "updateLayoutPanel", anim = FALSE)
+    shinyjs::toggle(id = "gridPanel", anim = FALSE)
     if (minimize_btn_state() == "up") {
       updateActionButton(session, "minimizeButton", icon = icon("arrow-down"))
       minimize_btn_state("down")
@@ -167,6 +167,7 @@ shinyServer(function(input, output, session) {
   
   # Render the plot setup panel depending on the selected plot type
   output$plot_setup <- renderUI({
+    minimize_btn_state() # trick to force rerendering of plot when minimizing upper panels to make plot larger
     output = tagList()
     if (length(input$selectplottype) > 0) {
       if (input$selectplottype == "scatter") {
