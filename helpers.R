@@ -27,10 +27,17 @@ make_sankey <- function(data, cols, colorPal = "BrBG") {
     sources <- c(sources, tmp_sources)
     targets <- c(targets, tmp_targets)
   }
+  
+  # if more labels than colors in the palette, than use interpolation:
+  maxColors <- brewer.pal.info[colorPal, ]$maxcolors
+  if (length(labels) > maxColors) {
+    colorPal <- colorRampPalette(brewer.pal(maxColors, colorPal))(length(labels))
+  }
+  
   p <- plot_ly(type = "sankey", orientation = "h",
                node = list(
                  label = labels,
-                 color = brewer.pal(length(labels), colorPal),
+                 color = colorPal,
                  pad = 10,
                  thickness = 20,
                  line = list(
