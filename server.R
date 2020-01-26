@@ -112,19 +112,26 @@ shinyServer(function(input, output, session) {
   
   # Logic for minize Button: Hides or show upper panales, changes plot size and its icon 
   observeEvent(input$minimizeButton, {
-    shinyjs::toggle(id = "filePanel", anim = FALSE)
-    shinyjs::toggle(id = "columnPanel", anim = FALSE)
-    shinyjs::toggle(id = "setupPanel", anim = FALSE)
-    shinyjs::toggle(id = "axisAndTitlePanel", anim = FALSE)
-    shinyjs::toggle(id = "updateLayoutPanel", anim = FALSE)
-    shinyjs::toggle(id = "gridPanel", anim = FALSE)
-    shinyjs::toggle(id = "colorPanel", anim = FALSE)
     print(input$scatter_mode)
     if (minimize_btn_state() == "up") {
+      shinyjs::hide(id = "filePanel", anim = FALSE)
+      shinyjs::hide(id = "columnPanel", anim = FALSE)
+      shinyjs::hide(id = "setupPanel", anim = FALSE)
+      shinyjs::hide(id = "axisAndTitlePanel", anim = FALSE)
+      shinyjs::hide(id = "updateLayoutPanel", anim = FALSE)
+      shinyjs::hide(id = "gridPanel", anim = FALSE)
+      shinyjs::hide(id = "colorPanel", anim = FALSE)
       updateActionButton(session, "minimizeButton", icon = icon("arrow-down"))
       minimize_btn_state("down")
       runjs(paste0('$("#plotPanel").css("height","', 80, 'vh")'))
     } else {
+      shinyjs::show(id = "filePanel", anim = FALSE)
+      shinyjs::show(id = "columnPanel", anim = FALSE)
+      shinyjs::show(id = "setupPanel", anim = FALSE)
+      shinyjs::show(id = "axisAndTitlePanel", anim = FALSE)
+      shinyjs::show(id = "updateLayoutPanel", anim = FALSE)
+      shinyjs::show(id = "gridPanel", anim = FALSE)
+      shinyjs::show(id = "colorPanel", anim = FALSE)
       updateActionButton(session, "minimizeButton", icon = icon("arrow-up"))
       minimize_btn_state("up")
       runjs(paste0('$("#plotPanel").css("height","', 50, 'vh")'))
