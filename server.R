@@ -9,7 +9,8 @@ shinyServer(function(input, output, session) {
   minimize_btn_state <- reactiveVal("up") # state of the minimize button 
   btn_showdata_label <- reactiveVal("Data") # state of the left menu button to change between plot and data 
   updated_layout <- reactiveVal(NULL) # object which stores the plot layout 
-
+  updated_grid_layout <- reactiveVal(NULL) # object which stores the boolean grid layout values
+  
   # Logic to load what happens when data is loaded. Elements to show when data is loaded 
   show_stuff_on_load <- function() {
     shinyjs::show(id = "plotPanel")
@@ -63,7 +64,7 @@ shinyServer(function(input, output, session) {
   
   # Logic to update layout of plot 
   observe({
-    tmp <- updated_layout()
+    tmp <- updated_grid_layout()
     if (input$xaxisgrid == TRUE){
       tmp[["xaxis"]] <- list(showgrid = TRUE)
     } else {
@@ -74,7 +75,7 @@ shinyServer(function(input, output, session) {
     } else {
       tmp[["yaxis"]] <- list(showgrid = FALSE)
     }
-    updated_layout(tmp)
+    updated_grid_layout(tmp)
   })
   
   # Logic to hide/show inputs depending on the type of plot
@@ -158,8 +159,8 @@ shinyServer(function(input, output, session) {
   observeEvent(input$update_layout, {
     layout_args <- list()
     layout_args[["title"]] <- if (!is.null(input$layout_title)) input$layout_title else NULL
-    layout_args[["xaxis"]] <- if (!is.null(input$layout_title)) list(title = input$layout_xaxis) else NULL
-    layout_args[["yaxis"]] <- if (!is.null(input$layout_title)) list(title = input$layout_yaxis) else NULL
+    layout_args[["xaxis"]] <- if (!is.null(input$layout_xaxis)) list(title = input$layout_xaxis) else NULL
+    layout_args[["yaxis"]] <- if (!is.null(input$layout_yaxis)) list(title = input$layout_yaxis) else NULL
     updated_layout(layout_args)
   })
   
@@ -228,6 +229,8 @@ shinyServer(function(input, output, session) {
   
   # CORE FUNCTION which actually produces the plot based on inputs 
   render_plot <- reactive({
+    print("VORHER")
+    print(str(updated_layout()))
     if (is.null(mydata())) {
       return(NULL)    
     }
@@ -241,6 +244,7 @@ shinyServer(function(input, output, session) {
     } else {
       my_palette <- input$select_colorpal
     }
+
     # ------------ SCATTER PLOT 
     if (input$selectplottype == "scatter") {
       arg_list <- list(
@@ -268,7 +272,7 @@ shinyServer(function(input, output, session) {
       }
       p <- do.call(plot_ly, arg_list)
     
-      # ------------ BAR PLOT 
+    # ------------ BAR PLOT 
     } else if (input$selectplottype == "bar") {
       arg_list <- list(
         x = tmp[[input$selectcol1]],
@@ -284,7 +288,8 @@ shinyServer(function(input, output, session) {
       }
       p <- do.call(plot_ly, arg_list) %>% layout(barmode = input$bar_mode)
       
-      # ------------ HISTOGRAM PLOT 
+    
+    # ------------ HISTOGRAM PLOT 
     } else if (input$selectplottype == "histogram") {
       arg_list <- list(
         x = tmp[[input$selectcol1]],
@@ -298,7 +303,8 @@ shinyServer(function(input, output, session) {
         }
       }
       p <- do.call(plot_ly, arg_list)
-      # ------------ PIE PLOT
+    
+    # ------------ PIE PLOT
     } else if (input$selectplottype == "pie") {
       tmp <- tmp[, .N, c(input$selectcol1)]
       p <- plot_ly(
@@ -308,7 +314,8 @@ shinyServer(function(input, output, session) {
         marker = list(colors = brewer.pal(nrow(tmp), input$select_colorpal)),
         textinfo = 'label+percent'
       )
-      # ------------ HEATMAP PLOT
+      
+    # ------------ HEATMAP PLOT
     } else if (input$selectplottype == "heatmap") {
       tmp1 <- tmp[, .N, c(input$selectcol1, input$selectcol2)]
       if (input$heatmap_mode == "percentage") {
@@ -320,14 +327,19 @@ shinyServer(function(input, output, session) {
         z = tmp1[["N"]], 
         type = "heatmap"
       )
-      # ------------ SANKEY PLOT
+    
+    # ------------ SANKEY PLOT
     } else if (input$selectplottype == "sankey") {
       p <- make_sankey(mydata(), input$sankey_columns, colorPal = input$select_colorpal)
     }
     last_plot_call(deparse(expr(p)))
     final_plot <- p %>% add_layout() 
+    my_layout <- updated_grid_layout()
+    my_layout[["p"]] <- final_plot
+    final_plot <- do.call(layout, my_layout)
     my_layout <- updated_layout()
     my_layout[["p"]] <- final_plot
+    
     plotly::config(do.call(layout, my_layout), responsive = TRUE)
     
     
