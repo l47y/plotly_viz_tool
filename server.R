@@ -102,11 +102,11 @@ shinyServer(function(input, output, session) {
         shinyjs::show("selectcol2")
       }
       if (input$selectplottype %in% c("pie")) {
-        updateSelectInput(session, "select_colorpal", choices = rownames(brewer.pal.info))
+       # updateSelectInput(session, "select_colorpal", choices = rownames(brewer.pal.info))
         shinyjs::hide("selectcol2")
         shinyjs::hide("selectcol3")
       } else {
-        updateSelectInput(session, "select_colorpal", choices = c("cybereon", rownames(brewer.pal.info)))
+      #  updateSelectInput(session, "select_colorpal", choices = c("cybereon", rownames(brewer.pal.info)))
         shinyjs::show("selectcol2")
         shinyjs::show("selectcol3")
       }
@@ -116,10 +116,10 @@ shinyServer(function(input, output, session) {
         shinyjs::show("selectcol3")
       }
       if (input$selectplottype %in% c("sankey")) {
-        updateSelectInput(session, "select_colorpal", choices = rownames(brewer.pal.info))
+      #  updateSelectInput(session, "select_colorpal", choices = rownames(brewer.pal.info))
         shinyjs::hide("columnPanel")
       } else {
-        updateSelectInput(session, "select_colorpal", choices = c("cybereon", rownames(brewer.pal.info)))
+      #  updateSelectInput(session, "select_colorpal", choices = c("cybereon", rownames(brewer.pal.info)))
         shinyjs::show("columnPanel")
       }
     }
@@ -256,8 +256,10 @@ shinyServer(function(input, output, session) {
     
     if (input$select_colorpal %in% c("cybereon")) {
       my_palette <- eval(parse(text = input$select_colorpal))
+      single_color <- cybereon[1]
     } else {
       my_palette <- input$select_colorpal
+      single_color <- brewer.pal(3, input$select_colorpal)[1]
     }
 
     # ------------ SCATTER PLOT 
@@ -273,8 +275,8 @@ shinyServer(function(input, output, session) {
       )
       if (!is.null(input$selectcol3)) {
         if (input$selectcol3 == "None") {
-          marker_conf = list(color = cybereon[1])
-          line_conf = list(color = cybereon[1])
+          marker_conf = list(color = single_color)
+          line_conf = list(color = single_color)
           if (input$scatter_mode == "lines") {
             arg_list[["line"]] = line_conf
           } else if (input$scatter_mode == "markers") {
@@ -298,7 +300,7 @@ shinyServer(function(input, output, session) {
       )
       if (!is.null(input$selectcol3)) {
         if (input$selectcol3 == "None") {
-          arg_list[["marker"]] <- list(color = cybereon[1])
+          arg_list[["marker"]] <- list(color = single_color)
         }
       }
       p <- do.call(plot_ly, arg_list) %>% layout(barmode = input$bar_mode)
@@ -314,7 +316,7 @@ shinyServer(function(input, output, session) {
       )
       if (!is.null(input$selectcol3)) {
         if (input$selectcol3 == "None") {
-          arg_list[["marker"]] <- list(color = cybereon[1])
+          arg_list[["marker"]] <- list(color = single_color)
         }
       }
       p <- do.call(plot_ly, arg_list)
@@ -326,7 +328,7 @@ shinyServer(function(input, output, session) {
         labels = tmp[[input$selectcol1]],
         values = tmp$N,
         type = "pie", 
-        marker = list(colors = brewer.pal(nrow(tmp), input$select_colorpal)),
+        marker = list(colors = produce_colors_from_palette(input$select_colorpal, nrow(tmp))),
         textinfo = 'label+percent'
       )
       
@@ -340,7 +342,8 @@ shinyServer(function(input, output, session) {
         x = tmp1[[input$selectcol1]], 
         y = tmp1[[input$selectcol2]], 
         z = tmp1[["N"]], 
-        type = "heatmap"
+        type = "heatmap",
+        colors = my_palette
       )
     
     # ------------ SANKEY PLOT

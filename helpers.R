@@ -28,16 +28,10 @@ make_sankey <- function(data, cols, colorPal = "BrBG") {
     targets <- c(targets, tmp_targets)
   }
   
-  # if more labels than colors in the palette, than use interpolation:
-  maxColors <- brewer.pal.info[colorPal, ]$maxcolors
-  if (length(labels) > maxColors) {
-    colorPal <- colorRampPalette(brewer.pal(maxColors, colorPal))(length(labels))
-  }
-  
   p <- plot_ly(type = "sankey", orientation = "h",
                node = list(
                  label = labels,
-                 color = colorPal,
+                 color = produce_colors_from_palette(colorPal, length(labels)),
                  pad = 10,
                  thickness = 20,
                  line = list(
@@ -59,6 +53,28 @@ get_column_types <- function(data) {
   factors <- names(types)[types %in% c("factor", "character")]
   return(list("num" = numerics, "char" = factors))
 }
+
+
+
+produce_colors_from_palette <- function(palette, n) {
+  maxColors <- brewer.pal.info[palette, ]$maxcolors
+  if (is.na(maxColors)) {
+    if (n > length(palette)) {
+      colorPal <- colorRampPalette(eval(parse(text = palette)))(n)
+    } else {
+      colorPal <- palette[1:n]
+    }
+  } else {
+    if (n > maxColors) {
+      colorPal <- colorRampPalette(brewer.pal(maxColors, palette))(n)
+    } else {
+      colorPal <- brewer.pal(n, palette)
+    }
+  }
+  return (colorPal)
+}
+
+produce_colors_from_palette("cybereon", 100)
 
 
 
