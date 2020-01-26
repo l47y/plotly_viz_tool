@@ -64,18 +64,33 @@ shinyServer(function(input, output, session) {
   
   # Logic to update layout of plot 
   observe({
-    tmp <- updated_grid_layout()
+    tmp <- isolate(updated_grid_layout())
     if (input$xaxisgrid == TRUE){
-      tmp[["xaxis"]] <- list(showgrid = TRUE)
+      tmp[["xaxis"]] <- list(showgrid = TRUE, gridcolor = "#808080")
     } else {
       tmp[["xaxis"]] <- list(showgrid = FALSE)
     }
     if (input$yaxisgrid == TRUE){
-      tmp[["yaxis"]] <- list(showgrid = TRUE)
+      tmp[["yaxis"]] <- list(showgrid = TRUE, gridcolor = "#808080")
     } else {
       tmp[["yaxis"]] <- list(showgrid = FALSE)
     }
     updated_grid_layout(tmp)
+  })
+  
+
+  
+  
+  # Logic to update x and y axis if a new column is selected
+  observe({
+    tmp <- isolate(updated_layout())
+    tmp[["xaxis"]] <- list(title = input$selectcol1)
+    updated_layout(tmp)
+  })
+  observe({
+    tmp <- isolate(updated_layout())
+    tmp[["yaxis"]] <- list(title = input$selectcol2)
+    updated_layout(tmp)
   })
   
   # Logic to hide/show inputs depending on the type of plot
@@ -113,7 +128,6 @@ shinyServer(function(input, output, session) {
   
   # Logic for minize Button: Hides or show upper panales, changes plot size and its icon 
   observeEvent(input$minimizeButton, {
-    print(input$scatter_mode)
     if (minimize_btn_state() == "up") {
       shinyjs::hide(id = "filePanel", anim = FALSE)
       shinyjs::hide(id = "columnPanel", anim = FALSE)
@@ -156,11 +170,14 @@ shinyServer(function(input, output, session) {
     updateActionButton(session, "btn_showdata", label = newlabel)
   })
   
+  # Logic to update layout when layout is updated 
   observeEvent(input$update_layout, {
     layout_args <- list()
     layout_args[["title"]] <- if (!is.null(input$layout_title)) input$layout_title else NULL
-    layout_args[["xaxis"]] <- if (!is.null(input$layout_xaxis)) list(title = input$layout_xaxis) else NULL
-    layout_args[["yaxis"]] <- if (!is.null(input$layout_yaxis)) list(title = input$layout_yaxis) else NULL
+    xaxis_title <- if (input$layout_xaxis != "") input$layout_xaxis else input$selectcol1
+    yaxis_title <- if (input$layout_yaxis != "") input$layout_yaxis else input$selectcol2
+    layout_args[["xaxis"]] <- list(title = xaxis_title)
+    layout_args[["yaxis"]] <- list(title = yaxis_title)
     updated_layout(layout_args)
   })
   
@@ -229,8 +246,6 @@ shinyServer(function(input, output, session) {
   
   # CORE FUNCTION which actually produces the plot based on inputs 
   render_plot <- reactive({
-    print("VORHER")
-    print(str(updated_layout()))
     if (is.null(mydata())) {
       return(NULL)    
     }
@@ -347,7 +362,6 @@ shinyServer(function(input, output, session) {
   
   # Show raw data 
   output$showdata <- renderDataTable({
-    print(head(mydata()))
     DT::datatable(mydata(), rownames = FALSE, options = list(
       autowidth = F, scrollY = T, searching = T, searchHighlight = T, pageLength = 20
     )) %>% DT::formatStyle(columns = colnames(mydata()), backgroundColor = "#242424", border = "0px")
