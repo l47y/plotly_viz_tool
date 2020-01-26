@@ -96,31 +96,22 @@ shinyServer(function(input, output, session) {
   # Logic to hide/show inputs depending on the type of plot
   observe({
     if (length(input$selectplottype) > 0) {
-      if (input$selectplottype %in% c("histogram")) {
+      if (input$selectplottype == "histogram") {
+        shinyjs::show("selectcol1")
         shinyjs::hide("selectcol2")
-      } else {
-        shinyjs::show("selectcol2")
-      }
-      if (input$selectplottype %in% c("pie")) {
-       # updateSelectInput(session, "select_colorpal", choices = rownames(brewer.pal.info))
+        shinyjs::show("selectcol3")
+      } else if (input$selectplottype == "pie") {
+        shinyjs::show("selectcol1")
         shinyjs::hide("selectcol2")
         shinyjs::hide("selectcol3")
-      } else {
-      #  updateSelectInput(session, "select_colorpal", choices = c("cybereon", rownames(brewer.pal.info)))
+      } else if (input$selectplottype == "heatmap") {
+        shinyjs::show("selectcol1")
         shinyjs::show("selectcol2")
-        shinyjs::show("selectcol3")
-      }
-      if (input$selectplottype == "heatmap") {
         shinyjs::hide("selectcol3")
-      } else {
-        shinyjs::show("selectcol3")
-      }
-      if (input$selectplottype %in% c("sankey")) {
-      #  updateSelectInput(session, "select_colorpal", choices = rownames(brewer.pal.info))
-        shinyjs::hide("columnPanel")
-      } else {
-      #  updateSelectInput(session, "select_colorpal", choices = c("cybereon", rownames(brewer.pal.info)))
-        shinyjs::show("columnPanel")
+      } else if (input$selectplottype == "sankey") {
+        shinyjs::hide("selectcol1")
+        shinyjs::hide("selectcol2")
+        shinyjs::hide("selectcol3")
       }
     }
   })
