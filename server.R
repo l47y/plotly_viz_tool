@@ -77,21 +77,38 @@ shinyServer(function(input, output, session) {
     updated_layout(tmp)
   })
   
-  # Logic to show the panel for selection of columns in plot 
+  # Logic to hide/show inputs depending on the type of plot
   observe({
     if (length(input$selectplottype) > 0) {
-      if (input$selectplottype %in% c("histogram", "pie")) {
+      if (input$selectplottype %in% c("histogram")) {
         shinyjs::hide("selectcol2")
       } else {
         shinyjs::show("selectcol2")
+      }
+      if (input$selectplottype %in% c("pie")) {
+        updateSelectInput(session, "select_colorpal", choices = rownames(brewer.pal.info))
+        shinyjs::hide("selectcol2")
+        shinyjs::hide("selectcol3")
+      } else {
+        updateSelectInput(session, "select_colorpal", choices = c("cybereon", rownames(brewer.pal.info)))
+        shinyjs::show("selectcol2")
+        shinyjs::show("selectcol3")
       }
       if (input$selectplottype == "heatmap") {
         shinyjs::hide("selectcol3")
       } else {
         shinyjs::show("selectcol3")
       }
+      if (input$selectplottype %in% c("sankey")) {
+        updateSelectInput(session, "select_colorpal", choices = rownames(brewer.pal.info))
+        shinyjs::hide("columnPanel")
+      } else {
+        updateSelectInput(session, "select_colorpal", choices = c("cybereon", rownames(brewer.pal.info)))
+        shinyjs::show("columnPanel")
+      }
     }
   })
+  
   
   # Logic for minize Button: Hides or show upper panales, changes plot size and its icon 
   observeEvent(input$minimizeButton, {
@@ -255,24 +272,34 @@ shinyServer(function(input, output, session) {
       )
       if (!is.null(input$selectcol3)) {
         if (input$selectcol3 == "None") {
-          arg_list[["colors"]] <- cybereon[1]
+          arg_list[["marker"]] <- list(color = cybereon[1])
         }
       }
       p <- do.call(plot_ly, arg_list) %>% layout(barmode = input$bar_mode)
       
       # ------------ HISTOGRAM PLOT 
     } else if (input$selectplottype == "histogram") {
-      p <- plot_ly(
+      arg_list <- list(
         x = tmp[[input$selectcol1]],
         type = "histogram", 
-        color = tmp[[input$selectcol3]]
+        color = tmp[[input$selectcol3]], 
+        colors = my_palette
       )
+      if (!is.null(input$selectcol3)) {
+        if (input$selectcol3 == "None") {
+          arg_list[["marker"]] <- list(color = cybereon[1])
+        }
+      }
+      p <- do.call(plot_ly, arg_list)
       # ------------ PIE PLOT
     } else if (input$selectplottype == "pie") {
+      tmp <- tmp[, .N, c(input$selectcol1)]
       p <- plot_ly(
         labels = tmp[[input$selectcol1]],
-        values = tmp[[input$selectcol1]],
-        type = "pie"
+        values = tmp$N,
+        type = "pie", 
+        marker = list(colors = brewer.pal(nrow(tmp), input$select_colorpal)),
+        textinfo = 'label+percent'
       )
       # ------------ HEATMAP PLOT
     } else if (input$selectplottype == "heatmap") {
@@ -288,13 +315,14 @@ shinyServer(function(input, output, session) {
       )
       # ------------ SANKEY PLOT
     } else if (input$selectplottype == "sankey") {
-      p <- make_sankey(mydata(), input$sankey_columns)
+      p <- make_sankey(mydata(), input$sankey_columns, colorPal = input$select_colorpal)
     }
     last_plot_call(deparse(expr(p)))
     final_plot <- p %>% add_layout() 
     my_layout <- updated_layout()
     my_layout[["p"]] <- final_plot
     plotly::config(do.call(layout, my_layout), responsive = TRUE)
+    
     
   })
   

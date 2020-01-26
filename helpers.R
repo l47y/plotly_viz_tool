@@ -1,5 +1,5 @@
 
-make_sankey <- function(data, cols) {
+make_sankey <- function(data, cols, colorPal = "BrBG") {
   # Produce a sankey diagramm based on an arbitrary number of columns. The connection between 
   # two layers ( = two columns) will be the number of occurances of every combination of the 
   # corresponding column values
@@ -30,6 +30,7 @@ make_sankey <- function(data, cols) {
   p <- plot_ly(type = "sankey", orientation = "h",
                node = list(
                  label = labels,
+                 color = brewer.pal(length(labels), colorPal),
                  pad = 10,
                  thickness = 20,
                  line = list(
