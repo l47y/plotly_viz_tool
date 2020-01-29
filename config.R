@@ -11,8 +11,6 @@ library(htmlwidgets)
 library(DT)
 library(RColorBrewer)
 
-source("helpers.R")
-
 # Set some layout and color stuff
 
 plot_axisfontstyle <- list(color = 'white')
@@ -30,4 +28,9 @@ add_layout <- function(p) {
 }
 
 cybereon <- c("#ff008d", "#ff6666",	"#ffb58c", "#a8fff8", "#16ffd6")
+
+source("helpers.R")
+
+
+
 
